@@ -1,0 +1,10 @@
+/home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/Abs.java
+/home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/Add.java
+/home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/Arg.java
+/home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/AssumptionArg.java
+/home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/Expression.java
+/home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/ExpressionFunction.java
+/home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/LiveCoding.java
+/home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/PlainAST/PlainAST.java
+/home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/RunningExamples.java
+/home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.samples/src/org/truffle/cs/samples/SimplestPEA.java
