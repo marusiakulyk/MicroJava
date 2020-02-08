@@ -8,6 +8,7 @@ import com.oracle.truffle.api.dsl.UnsupportedSpecializationException;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeCost;
+import com.oracle.truffle.api.nodes.UnexpectedResultException;
 import org.truffle.cs.mj.nodes.MJBinaryNode;
 import org.truffle.cs.mj.nodes.MJExpressionNode;
 import org.truffle.cs.mj.nodes.MJBinaryNode.AddNode;
@@ -42,10 +43,21 @@ public final class MJBinaryNodeFactory {
         @Override
         public Object executeGeneric(VirtualFrame frameValue) {
             int state = state_;
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
-            if (state != 0 /* is-active add(int, int) */) {
-                return add(lhsValue_, rhsValue_);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
+            if (state != 0 /* is-active doInt(int, int) */) {
+                return doInt(lhsValue_, rhsValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(lhsValue_, rhsValue_);
@@ -54,10 +66,21 @@ public final class MJBinaryNodeFactory {
         @Override
         public int executeI32(VirtualFrame frameValue) {
             int state = state_;
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
-            if (state != 0 /* is-active add(int, int) */) {
-                return add(lhsValue_, rhsValue_);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
+            if (state != 0 /* is-active doInt(int, int) */) {
+                return doInt(lhsValue_, rhsValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(lhsValue_, rhsValue_);
@@ -69,8 +92,8 @@ public final class MJBinaryNodeFactory {
                 int lhsValue_ = (int) lhsValue;
                 if (rhsValue instanceof Integer) {
                     int rhsValue_ = (int) rhsValue;
-                    this.state_ = state = state | 0b1 /* add-active add(int, int) */;
-                    return add(lhsValue_, rhsValue_);
+                    this.state_ = state = state | 0b1 /* add-active doInt(int, int) */;
+                    return doInt(lhsValue_, rhsValue_);
                 }
             }
             throw new UnsupportedSpecializationException(this, new Node[] {this.lhs_, this.rhs_}, lhsValue, rhsValue);
@@ -106,10 +129,21 @@ public final class MJBinaryNodeFactory {
         @Override
         public Object executeGeneric(VirtualFrame frameValue) {
             int state = state_;
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
-            if (state != 0 /* is-active add(int, int) */) {
-                return add(lhsValue_, rhsValue_);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
+            if (state != 0 /* is-active doInt(int, int) */) {
+                return doInt(lhsValue_, rhsValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(lhsValue_, rhsValue_);
@@ -118,10 +152,21 @@ public final class MJBinaryNodeFactory {
         @Override
         public int executeI32(VirtualFrame frameValue) {
             int state = state_;
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
-            if (state != 0 /* is-active add(int, int) */) {
-                return add(lhsValue_, rhsValue_);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
+            if (state != 0 /* is-active doInt(int, int) */) {
+                return doInt(lhsValue_, rhsValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(lhsValue_, rhsValue_);
@@ -133,8 +178,8 @@ public final class MJBinaryNodeFactory {
                 int lhsValue_ = (int) lhsValue;
                 if (rhsValue instanceof Integer) {
                     int rhsValue_ = (int) rhsValue;
-                    this.state_ = state = state | 0b1 /* add-active add(int, int) */;
-                    return add(lhsValue_, rhsValue_);
+                    this.state_ = state = state | 0b1 /* add-active doInt(int, int) */;
+                    return doInt(lhsValue_, rhsValue_);
                 }
             }
             throw new UnsupportedSpecializationException(this, new Node[] {this.lhs_, this.rhs_}, lhsValue, rhsValue);
@@ -170,10 +215,21 @@ public final class MJBinaryNodeFactory {
         @Override
         public Object executeGeneric(VirtualFrame frameValue) {
             int state = state_;
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
-            if (state != 0 /* is-active multiply(int, int) */) {
-                return multiply(lhsValue_, rhsValue_);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
+            if (state != 0 /* is-active doInt(int, int) */) {
+                return doInt(lhsValue_, rhsValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(lhsValue_, rhsValue_);
@@ -182,10 +238,21 @@ public final class MJBinaryNodeFactory {
         @Override
         public int executeI32(VirtualFrame frameValue) {
             int state = state_;
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
-            if (state != 0 /* is-active multiply(int, int) */) {
-                return multiply(lhsValue_, rhsValue_);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
+            if (state != 0 /* is-active doInt(int, int) */) {
+                return doInt(lhsValue_, rhsValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(lhsValue_, rhsValue_);
@@ -197,8 +264,8 @@ public final class MJBinaryNodeFactory {
                 int lhsValue_ = (int) lhsValue;
                 if (rhsValue instanceof Integer) {
                     int rhsValue_ = (int) rhsValue;
-                    this.state_ = state = state | 0b1 /* add-active multiply(int, int) */;
-                    return multiply(lhsValue_, rhsValue_);
+                    this.state_ = state = state | 0b1 /* add-active doInt(int, int) */;
+                    return doInt(lhsValue_, rhsValue_);
                 }
             }
             throw new UnsupportedSpecializationException(this, new Node[] {this.lhs_, this.rhs_}, lhsValue, rhsValue);
@@ -234,10 +301,21 @@ public final class MJBinaryNodeFactory {
         @Override
         public Object executeGeneric(VirtualFrame frameValue) {
             int state = state_;
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
-            if (state != 0 /* is-active multiply(int, int) */) {
-                return multiply(lhsValue_, rhsValue_);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
+            if (state != 0 /* is-active doInt(int, int) */) {
+                return doInt(lhsValue_, rhsValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(lhsValue_, rhsValue_);
@@ -246,10 +324,21 @@ public final class MJBinaryNodeFactory {
         @Override
         public int executeI32(VirtualFrame frameValue) {
             int state = state_;
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
-            if (state != 0 /* is-active multiply(int, int) */) {
-                return multiply(lhsValue_, rhsValue_);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
+            if (state != 0 /* is-active doInt(int, int) */) {
+                return doInt(lhsValue_, rhsValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(lhsValue_, rhsValue_);
@@ -261,8 +350,8 @@ public final class MJBinaryNodeFactory {
                 int lhsValue_ = (int) lhsValue;
                 if (rhsValue instanceof Integer) {
                     int rhsValue_ = (int) rhsValue;
-                    this.state_ = state = state | 0b1 /* add-active multiply(int, int) */;
-                    return multiply(lhsValue_, rhsValue_);
+                    this.state_ = state = state | 0b1 /* add-active doInt(int, int) */;
+                    return doInt(lhsValue_, rhsValue_);
                 }
             }
             throw new UnsupportedSpecializationException(this, new Node[] {this.lhs_, this.rhs_}, lhsValue, rhsValue);
@@ -298,10 +387,21 @@ public final class MJBinaryNodeFactory {
         @Override
         public Object executeGeneric(VirtualFrame frameValue) {
             int state = state_;
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
-            if (state != 0 /* is-active multiply(int, int) */) {
-                return multiply(lhsValue_, rhsValue_);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
+            if (state != 0 /* is-active doInt(int, int) */) {
+                return doInt(lhsValue_, rhsValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(lhsValue_, rhsValue_);
@@ -310,10 +410,21 @@ public final class MJBinaryNodeFactory {
         @Override
         public int executeI32(VirtualFrame frameValue) {
             int state = state_;
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
-            if (state != 0 /* is-active multiply(int, int) */) {
-                return multiply(lhsValue_, rhsValue_);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
+            if (state != 0 /* is-active doInt(int, int) */) {
+                return doInt(lhsValue_, rhsValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(lhsValue_, rhsValue_);
@@ -325,8 +436,8 @@ public final class MJBinaryNodeFactory {
                 int lhsValue_ = (int) lhsValue;
                 if (rhsValue instanceof Integer) {
                     int rhsValue_ = (int) rhsValue;
-                    this.state_ = state = state | 0b1 /* add-active multiply(int, int) */;
-                    return multiply(lhsValue_, rhsValue_);
+                    this.state_ = state = state | 0b1 /* add-active doInt(int, int) */;
+                    return doInt(lhsValue_, rhsValue_);
                 }
             }
             throw new UnsupportedSpecializationException(this, new Node[] {this.lhs_, this.rhs_}, lhsValue, rhsValue);
@@ -370,8 +481,19 @@ public final class MJBinaryNodeFactory {
         }
 
         private Object executeGeneric_int_int0(VirtualFrame frameValue, int state) {
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active equal(int, int) */;
             return equal(lhsValue_, rhsValue_);
         }
@@ -404,8 +526,19 @@ public final class MJBinaryNodeFactory {
         }
 
         private boolean executeBool_int_int2(VirtualFrame frameValue, int state) {
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active equal(int, int) */;
             return equal(lhsValue_, rhsValue_);
         }
@@ -480,8 +613,19 @@ public final class MJBinaryNodeFactory {
         }
 
         private Object executeGeneric_int_int0(VirtualFrame frameValue, int state) {
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active equal(int, int) */;
             return equal(lhsValue_, rhsValue_);
         }
@@ -514,8 +658,19 @@ public final class MJBinaryNodeFactory {
         }
 
         private boolean executeBool_int_int2(VirtualFrame frameValue, int state) {
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
             assert (state & 0b1) != 0 /* is-active equal(int, int) */;
             return equal(lhsValue_, rhsValue_);
         }
@@ -582,8 +737,19 @@ public final class MJBinaryNodeFactory {
         @Override
         public Object executeGeneric(VirtualFrame frameValue) {
             int state = state_;
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
             if (state != 0 /* is-active equal(int, int) */) {
                 return equal(lhsValue_, rhsValue_);
             }
@@ -594,8 +760,19 @@ public final class MJBinaryNodeFactory {
         @Override
         public boolean executeBool(VirtualFrame frameValue) {
             int state = state_;
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
             if (state != 0 /* is-active equal(int, int) */) {
                 return equal(lhsValue_, rhsValue_);
             }
@@ -646,8 +823,19 @@ public final class MJBinaryNodeFactory {
         @Override
         public Object executeGeneric(VirtualFrame frameValue) {
             int state = state_;
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
             if (state != 0 /* is-active equal(int, int) */) {
                 return equal(lhsValue_, rhsValue_);
             }
@@ -658,8 +846,19 @@ public final class MJBinaryNodeFactory {
         @Override
         public boolean executeBool(VirtualFrame frameValue) {
             int state = state_;
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
             if (state != 0 /* is-active equal(int, int) */) {
                 return equal(lhsValue_, rhsValue_);
             }
@@ -710,8 +909,19 @@ public final class MJBinaryNodeFactory {
         @Override
         public Object executeGeneric(VirtualFrame frameValue) {
             int state = state_;
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
             if (state != 0 /* is-active equal(int, int) */) {
                 return equal(lhsValue_, rhsValue_);
             }
@@ -722,8 +932,19 @@ public final class MJBinaryNodeFactory {
         @Override
         public boolean executeBool(VirtualFrame frameValue) {
             int state = state_;
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
             if (state != 0 /* is-active equal(int, int) */) {
                 return equal(lhsValue_, rhsValue_);
             }
@@ -774,8 +995,19 @@ public final class MJBinaryNodeFactory {
         @Override
         public Object executeGeneric(VirtualFrame frameValue) {
             int state = state_;
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
             if (state != 0 /* is-active equal(int, int) */) {
                 return equal(lhsValue_, rhsValue_);
             }
@@ -786,8 +1018,19 @@ public final class MJBinaryNodeFactory {
         @Override
         public boolean executeBool(VirtualFrame frameValue) {
             int state = state_;
-            int lhsValue_ = this.lhs_.executeI32(frameValue);
-            int rhsValue_ = this.rhs_.executeI32(frameValue);
+            int lhsValue_;
+            try {
+                lhsValue_ = this.lhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                Object rhsValue = this.rhs_.executeGeneric(frameValue);
+                return executeAndSpecialize(ex.getResult(), rhsValue);
+            }
+            int rhsValue_;
+            try {
+                rhsValue_ = this.rhs_.executeI32(frameValue);
+            } catch (UnexpectedResultException ex) {
+                return executeAndSpecialize(lhsValue_, ex.getResult());
+            }
             if (state != 0 /* is-active equal(int, int) */) {
                 return equal(lhsValue_, rhsValue_);
             }

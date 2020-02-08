@@ -12,6 +12,8 @@ public class Token {
 		ident("identifier"),
 		number("number"),
 		charConst("character constant"),
+		int_("int"),
+	    boolean_("boolean"),
 		plus("+"),
 		minus("-"),
 		times("*"),
@@ -57,6 +59,8 @@ public class Token {
 		void_("void"),
 		while_("while"),
 		eof("end of file");
+
+
 		// @formatter:on
 
         private String label;

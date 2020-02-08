@@ -38,11 +38,6 @@ public final class MJVariableNodeFactory {
         }
 
         @Override
-        public int executeI32(VirtualFrame frameValue) {
-            return (int) executeGeneric(frameValue);
-        }
-
-        @Override
         public NodeCost getCost() {
             return NodeCost.MONOMORPHIC;
         }

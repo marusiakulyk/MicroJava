@@ -34,6 +34,8 @@ import static org.truffle.cs.mj.parser.Token.Kind.slash;
 import static org.truffle.cs.mj.parser.Token.Kind.times;
 import static org.truffle.cs.mj.parser.Token.Kind.void_;
 import static org.truffle.cs.mj.parser.Token.Kind.while_;
+import static org.truffle.cs.mj.parser.Token.Kind.int_;
+import static org.truffle.cs.mj.parser.Token.Kind.boolean_;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,6 +61,9 @@ import org.truffle.cs.mj.nodes.MJReadParameterNode;
 import org.truffle.cs.mj.nodes.MJReturnNode;
 import org.truffle.cs.mj.nodes.MJStatementNode;
 import org.truffle.cs.mj.nodes.MJBinaryNode.AddNode;
+
+import org.truffle.cs.mj.nodes.MJUnaryNode;
+import org.truffle.cs.mj.nodes.MJUnaryNodeFactory;
 import org.truffle.cs.mj.nodes.MJVariableNode.MJReadLocalVariableNode;
 import org.truffle.cs.mj.nodes.MJVariableNode.MJWriteLocalVariableNode;
 import org.truffle.cs.mj.nodes.MJVariableNodeFactory;
@@ -358,7 +363,7 @@ public final class RecursiveDescentParser {
         return MJVariableNodeFactory.MJWriteLocalVariableNodeGen.create(value, frameSlot);
     }
 
-    public MJExpressionNode createLocalVarRead(String name) {
+    public MJExpressionNode localVarRead(String name) {
         FrameSlot frameSlot = slots.get(name);
         if (frameSlot == null) {
             // TODO: throw error
@@ -487,31 +492,31 @@ public final class RecursiveDescentParser {
                         Assignop();
                         curStatementNode = createLocalVarWrite(des,
                                         MJBinaryNodeFactory.AddNodeGen.create(
-                                                        createLocalVarRead(des), Term()));
+                                                        localVarRead(des), Term()));
                         break;
                     case minusas:
                         Assignop();
                         curStatementNode = createLocalVarWrite(des,
                                         MJBinaryNodeFactory.SubtractNodeGen.create(
-                                                        createLocalVarRead(des), Term()));
+                                                        localVarRead(des), Term()));
                         break;
                     case timesas:
                         Assignop();
                         curStatementNode = createLocalVarWrite(des,
                                         MJBinaryNodeFactory.MultiplicationNodeGen.create(
-                                                        createLocalVarRead(des), Term()));
+                                                        localVarRead(des), Term()));
                         break;
                     case slashas:
                         Assignop();
                         curStatementNode = createLocalVarWrite(des,
                                         MJBinaryNodeFactory.DividerNodeGen.create(
-                                                        createLocalVarRead(des), Term()));
+                                                        localVarRead(des), Term()));
                         break;
                     case remas:
                         Assignop();
                         curStatementNode = createLocalVarWrite(des,
                                         MJBinaryNodeFactory.ModulationNodeGen.create(
-                                                        createLocalVarRead(des), Term()));
+                                                        localVarRead(des), Term()));
                         break;
 
                     case lpar:
@@ -527,10 +532,16 @@ public final class RecursiveDescentParser {
                         curStatementNode = new MJExpressionStatement(invoke);
                         break;
                     case pplus:
-                        scan();
+                        Assignop();
+                        curStatementNode = createLocalVarWrite(des,
+                                        MJUnaryNodeFactory.IncrementNodeGen.create(
+                                                        localVarRead(des)));
                         break;
                     case mminus:
-                        scan();
+                        Assignop();
+                        curStatementNode = createLocalVarWrite(des,
+                                        MJUnaryNodeFactory.DecrementNodeGen.create(
+                                                        localVarRead(des)));
                         break;
                     default:
                         throw new Error("Designator Follow");
@@ -835,6 +846,14 @@ public final class RecursiveDescentParser {
                 break;
             case remas:
                 op = OpCode.rem;
+                scan();
+                break;
+            case pplus:
+                op = OpCode.add;
+                scan();
+                break;
+            case mminus:
+                op = OpCode.sub;
                 scan();
                 break;
             default:

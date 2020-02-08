@@ -1,5 +1,4 @@
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/main/MJRuntime.java
-/home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJAssignNode.java
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJBinaryNode.java
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJBlock.java
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJBreakNode.java
@@ -14,6 +13,8 @@
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJReadParameterNode.java
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJReturnNode.java
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJStatementNode.java
+/home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJTypeNode.java
+/home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJUnaryNode.java
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJVariableNode.java
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJWhileLoop.java
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/parser/RecursiveDescendScanner.java

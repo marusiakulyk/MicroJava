@@ -1,7 +1,5 @@
 package org.truffle.cs.mj.nodes;
 
-import org.truffle.cs.mj.nodes.MJReturnNode.MJReturnException;
-
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeInfo;

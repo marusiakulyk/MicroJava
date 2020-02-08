@@ -28,7 +28,7 @@ public class MJRuntime {
                     + "        p = 0;\n"//
                     + "        while(p < 5){\n"//
                     + "            print(p);\n"//
-                    + "            p = p + 1;\n"//
+                    + "            p++;\n"//
                     + "        } \n"//
                     + "        return p;\n"//
                     + "    }\n"//
@@ -49,10 +49,12 @@ public class MJRuntime {
 
     static String mjAssignTest = ""//
                     + "program Sample { "//
-                    + "void main() int i; int j; { \n"//
+                    + "void main() int i; int j; boolean c; { \n"//
                     + "                 i = 3;\n"//
-                    + "                 while(i > 1) {"//
-                    + "                     i -= 1;\n"//
+                    + "                 c = 0;\n"//
+
+                    + "                 while(i >1) {"//
+                    + "                     i --;\n"//
                     + "                 if(i==5) {"//
                     + "                    continue;" //
                     + "                 }else {"//

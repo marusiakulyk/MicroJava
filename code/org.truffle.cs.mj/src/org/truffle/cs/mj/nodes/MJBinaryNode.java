@@ -9,35 +9,35 @@ public abstract class MJBinaryNode extends MJExpressionNode {
 
     public static abstract class AddNode extends MJBinaryNode {
         @Specialization
-        public int add(int lhs, int rhs) {
+        public int doInt(int lhs, int rhs) {
             return lhs + rhs;
         }
     }
 
     public static abstract class SubtractNode extends MJBinaryNode {
         @Specialization
-        public int add(int lhs, int rhs) {
+        public int doInt(int lhs, int rhs) {
             return lhs - rhs;
         }
     }
 
     public static abstract class MultiplicationNode extends MJBinaryNode {
         @Specialization
-        public int multiply(int lhs, int rhs) {
+        public int doInt(int lhs, int rhs) {
             return lhs * rhs;
         }
     }
 
     public static abstract class DividerNode extends MJBinaryNode {
         @Specialization
-        public int multiply(int lhs, int rhs) {
+        public int doInt(int lhs, int rhs) {
             return lhs / rhs;
         }
     }
 
     public static abstract class ModulationNode extends MJBinaryNode {
         @Specialization
-        public int multiply(int lhs, int rhs) {
+        public int doInt(int lhs, int rhs) {
             return lhs % rhs;
         }
     }
