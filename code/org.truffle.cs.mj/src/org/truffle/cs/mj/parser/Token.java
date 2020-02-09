@@ -13,7 +13,11 @@ public class Token {
 		number("number"),
 		charConst("character constant"),
 		int_("int"),
+		char_("char"),
+		float_("float"),
 	    boolean_("boolean"),
+	    true_("true"),
+	    false_("false"),
 		plus("+"),
 		minus("-"),
 		times("*"),
@@ -89,7 +93,7 @@ public class Token {
     public final int col;
 
     /** Value of this token (for numbers or character constants). */
-    public int val;
+    public float val;
 
     /** String representation of this token. */
     public String str;

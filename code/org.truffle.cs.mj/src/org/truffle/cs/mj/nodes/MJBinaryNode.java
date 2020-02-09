@@ -12,6 +12,11 @@ public abstract class MJBinaryNode extends MJExpressionNode {
         public int doInt(int lhs, int rhs) {
             return lhs + rhs;
         }
+
+        @Specialization
+        public float doInt(float lhs, float rhs) {
+            return lhs + rhs;
+        }
     }
 
     public static abstract class SubtractNode extends MJBinaryNode {

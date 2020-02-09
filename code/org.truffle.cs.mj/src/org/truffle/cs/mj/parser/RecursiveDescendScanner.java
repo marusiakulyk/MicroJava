@@ -52,6 +52,9 @@ public final class RecursiveDescendScanner {
         keywords.put(Kind.void_.label(), Kind.void_);
         keywords.put(Kind.while_.label(), Kind.while_);
         keywords.put(Kind.abs.label(), Kind.abs);
+        keywords.put(Kind.true_.label(), Kind.true_);
+        keywords.put(Kind.false_.label(), Kind.false_);
+
     }
 
     /**
@@ -314,8 +317,8 @@ public final class RecursiveDescendScanner {
                 break;
             default:
                 throw new Error("Invalid char " + ch);
-                // nextCh();
-                // break;
+            // nextCh();
+            // break;
         } // end switch
         return t;
     }
@@ -332,6 +335,9 @@ public final class RecursiveDescendScanner {
         t.str = sb.toString();
         if (keywords.containsKey(t.str)) {
             t.kind = keywords.get(t.str);
+        } else if (t.str == "true" || t.str == "false") {
+            t.kind = t.str == "true" ? Kind.true_ : Kind.false_;
+            t.val = t.str == "true" ? 1 : 0;
         } else {
             t.kind = Kind.ident;
         }
@@ -339,15 +345,19 @@ public final class RecursiveDescendScanner {
 
     /** Reads a number into the <code>Token t</code>. */
     private void readNumber(Token t) {
+        boolean dot = false;
         StringBuilder sb = new StringBuilder();
         do {
             sb.append(ch);
+            if (ch == '.')
+                dot = true;
             nextCh();
-        } while (isDigit(ch));
-        t.kind = Kind.number;
+        } while (isDigit(ch) || ch == '.');
+
+        t.kind = dot ? Kind.float_ : Kind.int_;
         t.str = sb.toString();
         try {
-            t.val = Integer.parseInt(t.str);
+            t.val = Float.parseFloat(t.str);
         } catch (NumberFormatException nfe) {
             throw new Error("Number too big " + t.str);
         }

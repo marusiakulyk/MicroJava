@@ -47,6 +47,7 @@ import java.util.Map;
 
 import org.truffle.cs.mj.nodes.MJBinaryNode;
 import org.truffle.cs.mj.nodes.MJBlock;
+import org.truffle.cs.mj.nodes.MJBooleanNodeGen;
 import org.truffle.cs.mj.nodes.MJBreakNode;
 import org.truffle.cs.mj.nodes.MJConditionalNode;
 import org.truffle.cs.mj.nodes.MJConstantIntNode;
@@ -54,6 +55,8 @@ import org.truffle.cs.mj.nodes.MJConstantIntNodeGen;
 import org.truffle.cs.mj.nodes.MJContinueNode;
 import org.truffle.cs.mj.nodes.MJExpressionNode;
 import org.truffle.cs.mj.nodes.MJExpressionStatement;
+import org.truffle.cs.mj.nodes.MJFloatNodeGen;
+import org.truffle.cs.mj.nodes.MJFrameWrapper;
 import org.truffle.cs.mj.nodes.MJFunction;
 import org.truffle.cs.mj.nodes.MJInvokeNode;
 import org.truffle.cs.mj.nodes.MJPrintNodeGen;
@@ -113,7 +116,11 @@ public final class RecursiveDescentParser {
         lt,
         le,
         gt,
-        ge;
+        ge,
+        tb,
+        fb,
+        and,
+        or;
 
         public static CompOp invert(CompOp op) {
             switch (op) {
@@ -129,6 +136,10 @@ public final class RecursiveDescentParser {
                     return le;
                 case ge:
                     return lt;
+                case tb:
+                    return fb;
+                case fb:
+                    return tb;
             }
             throw new IllegalArgumentException("Unexpected compare operator");
         }
@@ -325,11 +336,12 @@ public final class RecursiveDescentParser {
 
     /** VarDecl = Type ident { "," ident } ";" . */
     private void VarDecl() {
-        Type();
-        check(ident);
+        String type = Type();
+        createLocalVar(type, Designator());
+
         while (sym == comma) {
             scan();
-            check(ident);
+            createLocalVar(type, Designator());
         }
         check(semicolon);
     }
@@ -352,19 +364,23 @@ public final class RecursiveDescentParser {
      */
     FrameDescriptor currentFrameDescriptor;
 
-    public Map<String, FrameSlot> slots = new HashMap<>();
+    public Map<String, MJFrameWrapper> slots = new HashMap<>();
 
-    public MJStatementNode createLocalVarWrite(String name, MJExpressionNode value) {
-        FrameSlot frameSlot = slots.get(name);
-        if (frameSlot == null) {
-            frameSlot = currentFrameDescriptor.addFrameSlot(name);
-            slots.put(name, frameSlot);
-        }
+    // TODO cannot create variables with same name
+    public void createLocalVar(String type, String name) {
+        FrameSlot frameSlot = currentFrameDescriptor.addFrameSlot(name);
+        MJFrameWrapper frameWrapper = new MJFrameWrapper(type, frameSlot);
+        slots.put(name, frameWrapper);
+    }
+
+// TODO check types
+    public MJStatementNode localVarWrite(String name, MJExpressionNode value) {
+        FrameSlot frameSlot = slots.get(name).getFrame();
         return MJVariableNodeFactory.MJWriteLocalVariableNodeGen.create(value, frameSlot);
     }
 
     public MJExpressionNode localVarRead(String name) {
-        FrameSlot frameSlot = slots.get(name);
+        FrameSlot frameSlot = slots.get(name).getFrame();
         if (frameSlot == null) {
             // TODO: throw error
         }
@@ -436,12 +452,31 @@ public final class RecursiveDescentParser {
     }
 
     /** Type = ident . */
-    private void Type() {
-        check(ident);
+    private String Type() {
+        String type = "";
+        switch (sym) {
+            case boolean_:
+                type = "boolean";
+                scan();
+                break;
+            case int_:
+                type = "int";
+                scan();
+                break;
+            case float_:
+                type = "float";
+                scan();
+                break;
+            default:
+                scan();
+                break;
+
+        }
         if (sym == lbrack) {
             scan();
             check(rbrack);
         }
+        return type;
     }
 
     /** Block = "{" { Statement } "}" . */
@@ -486,35 +521,35 @@ public final class RecursiveDescentParser {
                 switch (sym) {
                     case assign:
                         Assignop();
-                        curStatementNode = createLocalVarWrite(des, Expr());
+                        curStatementNode = localVarWrite(des, Expr());
                         break;
                     case plusas:
                         Assignop();
-                        curStatementNode = createLocalVarWrite(des,
+                        curStatementNode = localVarWrite(des,
                                         MJBinaryNodeFactory.AddNodeGen.create(
                                                         localVarRead(des), Term()));
                         break;
                     case minusas:
                         Assignop();
-                        curStatementNode = createLocalVarWrite(des,
+                        curStatementNode = localVarWrite(des,
                                         MJBinaryNodeFactory.SubtractNodeGen.create(
                                                         localVarRead(des), Term()));
                         break;
                     case timesas:
                         Assignop();
-                        curStatementNode = createLocalVarWrite(des,
+                        curStatementNode = localVarWrite(des,
                                         MJBinaryNodeFactory.MultiplicationNodeGen.create(
                                                         localVarRead(des), Term()));
                         break;
                     case slashas:
                         Assignop();
-                        curStatementNode = createLocalVarWrite(des,
+                        curStatementNode = localVarWrite(des,
                                         MJBinaryNodeFactory.DividerNodeGen.create(
                                                         localVarRead(des), Term()));
                         break;
                     case remas:
                         Assignop();
-                        curStatementNode = createLocalVarWrite(des,
+                        curStatementNode = localVarWrite(des,
                                         MJBinaryNodeFactory.ModulationNodeGen.create(
                                                         localVarRead(des), Term()));
                         break;
@@ -533,13 +568,13 @@ public final class RecursiveDescentParser {
                         break;
                     case pplus:
                         Assignop();
-                        curStatementNode = createLocalVarWrite(des,
+                        curStatementNode = localVarWrite(des,
                                         MJUnaryNodeFactory.IncrementNodeGen.create(
                                                         localVarRead(des)));
                         break;
                     case mminus:
                         Assignop();
-                        curStatementNode = createLocalVarWrite(des,
+                        curStatementNode = localVarWrite(des,
                                         MJUnaryNodeFactory.DecrementNodeGen.create(
                                                         localVarRead(des)));
                         break;
@@ -692,6 +727,14 @@ public final class RecursiveDescentParser {
             case gt:
                 expressionNode = MJBinaryNodeFactory.GreaterNodeGen.create(expressionNode, Expr());
                 break;
+            case and:
+                expressionNode = MJBinaryNodeFactory.AndNodeGen.create(expressionNode, Expr());
+                break;
+            case or:
+                expressionNode = MJBinaryNodeFactory.OrNodeGen.create(expressionNode, Expr());
+                break;
+            case tb:
+                expressionNode = MJBinaryNodeFactory.EqualNodeGen.create(expressionNode, MJBooleanNodeGen.create(true));
             default:
                 break;
         }
@@ -701,11 +744,6 @@ public final class RecursiveDescentParser {
     /** Expr = [ "-" ] Term { Addop Term } . */
     private MJExpressionNode Expr() {
         MJExpressionNode expressionNode = null;
-        boolean neg = false;
-        if (sym == minus) {
-            scan();
-            neg = true;
-        }
         expressionNode = Term();
         while (sym == plus || sym == minus) {
             if (sym == plus) {
@@ -720,6 +758,7 @@ public final class RecursiveDescentParser {
     }
 
     /** Term = Factor { Mulop Factor } . */
+
     private MJExpressionNode Term() {
         MJExpressionNode expressionNode = null;
         expressionNode = Factor();
@@ -751,6 +790,7 @@ public final class RecursiveDescentParser {
      */
     private MJExpressionNode Factor() {
         MJExpressionNode expressionNode = null;
+        boolean neg = false;
         switch (sym) {
             case abs:
                 scan();
@@ -758,27 +798,43 @@ public final class RecursiveDescentParser {
                 Expr();
                 check(rpar);
                 break;
+            case minus:
+                scan();
+                neg = true;
+            case int_:
+                scan();
+                expressionNode = MJConstantIntNodeGen.create(neg ? (int) -t.val : (int) t.val);
+                break;
+            case float_:
+                scan();
+                expressionNode = MJFloatNodeGen.create(neg ? -t.val : t.val);
+                break;
+            case true_:
+                scan();
+                expressionNode = MJBooleanNodeGen.create(true);
+
+                break;
+            case false_:
+                scan();
+                expressionNode = MJBooleanNodeGen.create(false);
+                break;
             case ident:
                 String varname = Designator();
                 if (sym == lpar) {
                     ActPars();
                 } else {
                     // normal variable node
-
                     int index = parameterNames != null ? parameterNames.indexOf(varname) : -1;
                     if (index >= 0) {
                         expressionNode = new MJReadParameterNode(index);
                     } else {
                         // TODO: add checking
-                        expressionNode = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(slots.get(varname));
+                        expressionNode = MJVariableNodeFactory.MJReadLocalVariableNodeGen.create(slots.get(varname).getFrame());
                     }
 
                 }
                 break;
-            case number:
-                scan();
-                expressionNode = MJConstantIntNodeGen.create(t.val);
-                break;
+
             case charConst:
                 scan();
                 break;
@@ -889,6 +945,17 @@ public final class RecursiveDescentParser {
             case geq:
                 op = CompOp.ge;
                 scan();
+                break;
+            case and:
+                op = CompOp.and;
+                scan();
+                break;
+            case or:
+                op = CompOp.or;
+                scan();
+                break;
+            case rpar:
+                op = CompOp.tb;
                 break;
             default:
                 throw new Error("invalid rel operation " + sym);

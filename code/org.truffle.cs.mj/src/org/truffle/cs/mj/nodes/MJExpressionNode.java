@@ -19,7 +19,7 @@ public abstract class MJExpressionNode extends Node {
 
     public boolean executeBool(VirtualFrame frame) {
         Object resultObject = executeGeneric(frame);
-        if (resultObject instanceof Integer) {
+        if (resultObject instanceof Boolean) {
             return (boolean) resultObject;
         }
         CompilerDirectives.transferToInterpreter();

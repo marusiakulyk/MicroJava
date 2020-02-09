@@ -49,23 +49,20 @@ public class MJRuntime {
 
     static String mjAssignTest = ""//
                     + "program Sample { "//
-                    + "void main() int i; int j; boolean c; { \n"//
-                    + "                 i = 3;\n"//
-                    + "                 c = 0;\n"//
-
-                    + "                 while(i >1) {"//
-                    + "                     i --;\n"//
-                    + "                 if(i==5) {"//
-                    + "                    continue;" //
-                    + "                 }else {"//
-                    + "                     print(i);\n"//
-                    + "                 }"//
-                    + "                 }"//
-                    + "         }\n"//
-                    + "}";
+                    + "void main() float i; float j; boolean c, d; { \n"//
+                    + " i = 6.1  ;\n"//
+// + " c = true;\n"//
+// + " d = false;\n"//
+// + " while(c||d) {"//
+// + " i ++;\n"//
+                    + " print(i);\n"//
+// + " if(i>0){" + " c = false;\n"//
+// + " }"//
+// + " }\n"//
+                    + "}" + "}";
 
     static String whileLoopRD = "program P {"//
-                    + " void foo(int i,int j) {print(i+j);return;}" //
+                    + " void foo(int i,int j) {" + "print(i+j);" + "return;}" //
                     + "             void main () int p;{ "//
                     + "                 p = 0;\n"//
                     + "                 while(p < 10) {"//

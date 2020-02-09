@@ -1,12 +1,15 @@
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/main/MJRuntime.java
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJBinaryNode.java
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJBlock.java
+/home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJBooleanNode.java
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJBreakNode.java
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJConditionalNode.java
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJConstantIntNode.java
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJContinueNode.java
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJExpressionNode.java
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJExpressionStatement.java
+/home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJFloatNode.java
+/home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJFrameWrapper.java
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJFunction.java
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJInvokeNode.java
 /home/marusia/Compilers/Source/trufflecourse/code/org.truffle.cs.mj/src/org/truffle/cs/mj/nodes/MJPrintNode.java

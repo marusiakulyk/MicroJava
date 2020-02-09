@@ -43,6 +43,14 @@ public final class MJBinaryNodeFactory {
         @Override
         public Object executeGeneric(VirtualFrame frameValue) {
             int state = state_;
+            if ((state & 0b10) == 0 /* only-active doInt(int, int) */ && state != 0  /* is-not doInt(int, int) && doInt(float, float) */) {
+                return executeGeneric_int_int0(frameValue, state);
+            } else {
+                return executeGeneric_generic1(frameValue, state);
+            }
+        }
+
+        private Object executeGeneric_int_int0(VirtualFrame frameValue, int state) {
             int lhsValue_;
             try {
                 lhsValue_ = this.lhs_.executeI32(frameValue);
@@ -56,43 +64,75 @@ public final class MJBinaryNodeFactory {
             } catch (UnexpectedResultException ex) {
                 return executeAndSpecialize(lhsValue_, ex.getResult());
             }
-            if (state != 0 /* is-active doInt(int, int) */) {
-                return doInt(lhsValue_, rhsValue_);
+            assert (state & 0b1) != 0 /* is-active doInt(int, int) */;
+            return doInt(lhsValue_, rhsValue_);
+        }
+
+        private Object executeGeneric_generic1(VirtualFrame frameValue, int state) {
+            Object lhsValue_ = this.lhs_.executeGeneric(frameValue);
+            Object rhsValue_ = this.rhs_.executeGeneric(frameValue);
+            if ((state & 0b1) != 0 /* is-active doInt(int, int) */ && lhsValue_ instanceof Integer) {
+                int lhsValue__ = (int) lhsValue_;
+                if (rhsValue_ instanceof Integer) {
+                    int rhsValue__ = (int) rhsValue_;
+                    return doInt(lhsValue__, rhsValue__);
+                }
+            }
+            if ((state & 0b10) != 0 /* is-active doInt(float, float) */ && lhsValue_ instanceof Float) {
+                float lhsValue__ = (float) lhsValue_;
+                if (rhsValue_ instanceof Float) {
+                    float rhsValue__ = (float) rhsValue_;
+                    return doInt(lhsValue__, rhsValue__);
+                }
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
             return executeAndSpecialize(lhsValue_, rhsValue_);
         }
 
         @Override
-        public int executeI32(VirtualFrame frameValue) {
+        public int executeI32(VirtualFrame frameValue) throws UnexpectedResultException {
             int state = state_;
             int lhsValue_;
             try {
                 lhsValue_ = this.lhs_.executeI32(frameValue);
             } catch (UnexpectedResultException ex) {
                 Object rhsValue = this.rhs_.executeGeneric(frameValue);
-                return executeAndSpecialize(ex.getResult(), rhsValue);
+                return expectInteger(executeAndSpecialize(ex.getResult(), rhsValue));
             }
             int rhsValue_;
             try {
                 rhsValue_ = this.rhs_.executeI32(frameValue);
             } catch (UnexpectedResultException ex) {
-                return executeAndSpecialize(lhsValue_, ex.getResult());
+                return expectInteger(executeAndSpecialize(lhsValue_, ex.getResult()));
             }
-            if (state != 0 /* is-active doInt(int, int) */) {
+            if ((state & 0b1) != 0 /* is-active doInt(int, int) */) {
                 return doInt(lhsValue_, rhsValue_);
             }
             CompilerDirectives.transferToInterpreterAndInvalidate();
-            return executeAndSpecialize(lhsValue_, rhsValue_);
+            return expectInteger(executeAndSpecialize(lhsValue_, rhsValue_));
         }
 
-        private int executeAndSpecialize(Object lhsValue, Object rhsValue) {
+        @Override
+        public boolean executeBool(VirtualFrame frameValue) {
+            CompilerDirectives.transferToInterpreterAndInvalidate();
+            throw new AssertionError("Delegation failed.");
+        }
+
+        private Object executeAndSpecialize(Object lhsValue, Object rhsValue) {
             int state = state_;
             if (lhsValue instanceof Integer) {
                 int lhsValue_ = (int) lhsValue;
                 if (rhsValue instanceof Integer) {
                     int rhsValue_ = (int) rhsValue;
                     this.state_ = state = state | 0b1 /* add-active doInt(int, int) */;
+                    return doInt(lhsValue_, rhsValue_);
+                }
+            }
+            if (lhsValue instanceof Float) {
+                float lhsValue_ = (float) lhsValue;
+                if (rhsValue instanceof Float) {
+                    float rhsValue_ = (float) rhsValue;
+                    this.state_ = state = state | 0b10 /* add-active doInt(float, float) */;
                     return doInt(lhsValue_, rhsValue_);
                 }
             }
@@ -104,9 +144,17 @@ public final class MJBinaryNodeFactory {
             int state = state_;
             if (state == 0b0) {
                 return NodeCost.UNINITIALIZED;
-            } else {
+            } else if ((state & (state - 1)) == 0 /* is-single-active  */) {
                 return NodeCost.MONOMORPHIC;
             }
+            return NodeCost.POLYMORPHIC;
+        }
+
+        private static int expectInteger(Object value) throws UnexpectedResultException {
+            if (value instanceof Integer) {
+                return (int) value;
+            }
+            throw new UnexpectedResultException(value);
         }
 
         public static AddNode create(MJExpressionNode lhs, MJExpressionNode rhs) {
