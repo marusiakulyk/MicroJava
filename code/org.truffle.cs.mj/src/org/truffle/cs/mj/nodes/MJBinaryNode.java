@@ -17,12 +17,67 @@ public abstract class MJBinaryNode extends MJExpressionNode {
         public float doInt(float lhs, float rhs) {
             return lhs + rhs;
         }
+
+        @Specialization
+        public float doInt(int lhs, float rhs) {
+            return lhs + rhs;
+        }
+
+        @Specialization
+        public float doInt(float lhs, int rhs) {
+            return lhs + rhs;
+        }
+
+        @Specialization
+        public char doInt(char lhs, int rhs) {
+            return (char) (lhs + rhs);
+        }
+
+        @Specialization
+        public char doInt(int lhs, char rhs) {
+            return (char) (lhs + rhs);
+        }
+
+        @Specialization
+        public char doInt(char lhs, char rhs) {
+            return (char) (lhs + rhs);
+        }
     }
 
     public static abstract class SubtractNode extends MJBinaryNode {
         @Specialization
         public int doInt(int lhs, int rhs) {
             return lhs - rhs;
+        }
+
+        @Specialization
+        public float doInt(float lhs, float rhs) {
+            return lhs - rhs;
+        }
+
+        @Specialization
+        public float doInt(int lhs, float rhs) {
+            return lhs - rhs;
+        }
+
+        @Specialization
+        public float doInt(float lhs, int rhs) {
+            return lhs - rhs;
+        }
+
+        @Specialization
+        public char doInt(char lhs, int rhs) {
+            return (char) (lhs - rhs);
+        }
+
+        @Specialization
+        public char doInt(int lhs, char rhs) {
+            return (char) (lhs - rhs);
+        }
+
+        @Specialization
+        public char doInt(char lhs, char rhs) {
+            return (char) (lhs - rhs);
         }
     }
 
@@ -31,11 +86,41 @@ public abstract class MJBinaryNode extends MJExpressionNode {
         public int doInt(int lhs, int rhs) {
             return lhs * rhs;
         }
+
+        @Specialization
+        public float doInt(float lhs, float rhs) {
+            return lhs * rhs;
+        }
+
+        @Specialization
+        public float doInt(int lhs, float rhs) {
+            return lhs * rhs;
+        }
+
+        @Specialization
+        public float doInt(float lhs, int rhs) {
+            return lhs * rhs;
+        }
     }
 
     public static abstract class DividerNode extends MJBinaryNode {
         @Specialization
         public int doInt(int lhs, int rhs) {
+            return lhs / rhs;
+        }
+
+        @Specialization
+        public float doInt(float lhs, float rhs) {
+            return lhs / rhs;
+        }
+
+        @Specialization
+        public float doInt(float lhs, int rhs) {
+            return lhs / rhs;
+        }
+
+        @Specialization
+        public float doInt(int lhs, float rhs) {
             return lhs / rhs;
         }
     }
@@ -54,6 +139,36 @@ public abstract class MJBinaryNode extends MJExpressionNode {
         }
 
         @Specialization
+        public boolean equal(float lhs, float rhs) {
+            return lhs == rhs;
+        }
+
+        @Specialization
+        public boolean equal(float lhs, int rhs) {
+            return lhs == rhs;
+        }
+
+        @Specialization
+        public boolean equal(int lhs, float rhs) {
+            return lhs == rhs;
+        }
+
+        @Specialization
+        public boolean equal(char lhs, char rhs) {
+            return lhs == rhs;
+        }
+
+        @Specialization
+        public boolean equal(char lhs, int rhs) {
+            return lhs == rhs;
+        }
+
+        @Specialization
+        public boolean equal(int lhs, char rhs) {
+            return lhs == rhs;
+        }
+
+        @Specialization
         public boolean equal(Object lhs, Object rhs) {
             return lhs == rhs;
         }
@@ -63,6 +178,36 @@ public abstract class MJBinaryNode extends MJExpressionNode {
     public static abstract class NotEqualNode extends MJBinaryNode {
         @Specialization
         public boolean equal(int lhs, int rhs) {
+            return lhs != rhs;
+        }
+
+        @Specialization
+        public boolean equal(float lhs, float rhs) {
+            return lhs != rhs;
+        }
+
+        @Specialization
+        public boolean equal(float lhs, int rhs) {
+            return lhs != rhs;
+        }
+
+        @Specialization
+        public boolean equal(int lhs, float rhs) {
+            return lhs != rhs;
+        }
+
+        @Specialization
+        public boolean equal(char lhs, char rhs) {
+            return lhs != rhs;
+        }
+
+        @Specialization
+        public boolean equal(char lhs, int rhs) {
+            return lhs != rhs;
+        }
+
+        @Specialization
+        public boolean equal(int lhs, char rhs) {
             return lhs != rhs;
         }
 
@@ -78,6 +223,37 @@ public abstract class MJBinaryNode extends MJExpressionNode {
         public boolean equal(int lhs, int rhs) {
             return lhs < rhs;
         }
+
+        @Specialization
+        public boolean equal(float lhs, float rhs) {
+            return lhs < rhs;
+        }
+
+        @Specialization
+        public boolean equal(float lhs, int rhs) {
+            return lhs < rhs;
+        }
+
+        @Specialization
+        public boolean equal(int lhs, float rhs) {
+            return lhs < rhs;
+        }
+
+        @Specialization
+        public boolean equal(char lhs, char rhs) {
+            return lhs < rhs;
+        }
+
+        @Specialization
+        public boolean equal(char lhs, int rhs) {
+            return lhs < rhs;
+        }
+
+        @Specialization
+        public boolean equal(int lhs, char rhs) {
+            return lhs < rhs;
+        }
+
     }
 
     public static abstract class LessEqualNode extends MJBinaryNode {
@@ -85,6 +261,37 @@ public abstract class MJBinaryNode extends MJExpressionNode {
         public boolean equal(int lhs, int rhs) {
             return lhs <= rhs;
         }
+
+        @Specialization
+        public boolean equal(float lhs, float rhs) {
+            return lhs <= rhs;
+        }
+
+        @Specialization
+        public boolean equal(float lhs, int rhs) {
+            return lhs <= rhs;
+        }
+
+        @Specialization
+        public boolean equal(int lhs, float rhs) {
+            return lhs <= rhs;
+        }
+
+        @Specialization
+        public boolean equal(char lhs, char rhs) {
+            return lhs <= rhs;
+        }
+
+        @Specialization
+        public boolean equal(char lhs, int rhs) {
+            return lhs <= rhs;
+        }
+
+        @Specialization
+        public boolean equal(int lhs, char rhs) {
+            return lhs <= rhs;
+        }
+
     }
 
     public static abstract class GreaterNode extends MJBinaryNode {
@@ -92,6 +299,37 @@ public abstract class MJBinaryNode extends MJExpressionNode {
         public boolean equal(int lhs, int rhs) {
             return lhs > rhs;
         }
+
+        @Specialization
+        public boolean equal(float lhs, float rhs) {
+            return lhs > rhs;
+        }
+
+        @Specialization
+        public boolean equal(float lhs, int rhs) {
+            return lhs > rhs;
+        }
+
+        @Specialization
+        public boolean equal(int lhs, float rhs) {
+            return lhs > rhs;
+        }
+
+        @Specialization
+        public boolean equal(char lhs, char rhs) {
+            return lhs > rhs;
+        }
+
+        @Specialization
+        public boolean equal(char lhs, int rhs) {
+            return lhs > rhs;
+        }
+
+        @Specialization
+        public boolean equal(int lhs, char rhs) {
+            return lhs > rhs;
+        }
+
     }
 
     public static abstract class GreaterEqualNode extends MJBinaryNode {
@@ -99,6 +337,37 @@ public abstract class MJBinaryNode extends MJExpressionNode {
         public boolean equal(int lhs, int rhs) {
             return lhs >= rhs;
         }
+
+        @Specialization
+        public boolean equal(float lhs, float rhs) {
+            return lhs >= rhs;
+        }
+
+        @Specialization
+        public boolean equal(float lhs, int rhs) {
+            return lhs >= rhs;
+        }
+
+        @Specialization
+        public boolean equal(int lhs, float rhs) {
+            return lhs >= rhs;
+        }
+
+        @Specialization
+        public boolean equal(char lhs, char rhs) {
+            return lhs >= rhs;
+        }
+
+        @Specialization
+        public boolean equal(char lhs, int rhs) {
+            return lhs >= rhs;
+        }
+
+        @Specialization
+        public boolean equal(int lhs, char rhs) {
+            return lhs >= rhs;
+        }
+
     }
 
     public static abstract class OrNode extends MJBinaryNode {
@@ -106,6 +375,7 @@ public abstract class MJBinaryNode extends MJExpressionNode {
         public boolean equal(boolean lhs, boolean rhs) {
             return lhs || rhs;
         }
+
     }
 
     public static abstract class AndNode extends MJBinaryNode {

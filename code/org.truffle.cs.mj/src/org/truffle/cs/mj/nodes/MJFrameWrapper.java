@@ -10,6 +10,7 @@ public class MJFrameWrapper {
     public MJFrameWrapper(String type, FrameSlot frame) {
         this.frame = frame;
         this.type = type;
+
     }
 
     public String getType() {

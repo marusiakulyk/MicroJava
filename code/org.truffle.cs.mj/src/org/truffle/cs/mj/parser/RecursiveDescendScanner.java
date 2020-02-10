@@ -393,6 +393,7 @@ public final class RecursiveDescendScanner {
                 throw new Error("missing escape sequence");
             }
         } else {
+            t.kind = Kind.char_;
             t.val = ch;
             nextCh();
             if (ch == '\'') {
